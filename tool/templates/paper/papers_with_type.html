@@ -1,0 +1,7 @@
+{% extends 'paper/paper_list.html' %}
+{% block title %}{{ paper_type.type_name }}{% endblock %}
+
+{% block paper_list_title %}
+    分类：{{ paper_type.type_name }}
+    <a href="{% url 'paper_list' %}">查看全部论文</a>
+{% endblock %}

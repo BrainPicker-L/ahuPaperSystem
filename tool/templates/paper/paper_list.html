@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block title %}我的网站{% endblock %}
+{% block nav_paper_active %}active{% endblock %}
+
+{% load staticfiles %}
+{% load clicks_tags %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'paper/paper.css' %}">
+{% endblock %}
+
+{# 页面内容 #}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+                <form class="navbar-form navbar-right" action="" method="POST">
+                            {% csrf_token %}
+                            {{ search_form }}
+                            <input type="submit" value="搜索" class="btn btn-primary pull-right">
+                    </form>
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">{% block paper_list_title %}论文列表{% endblock %}</div>
+                    <div class="panel-body">
+
+                        {% for paper in papers %}
+                            <div class="blog">
+                                <h3>
+                                    <a target="_blank" href={{ paper.paper_url }} onclick="clickChange('{% get_content_type paper %}', {{ paper.pk }})">{{ paper.chinese_title }}<span class="badge">{% get_click_count paper %}</span></a>
+                                </h3>
+
+                                <ul class="blog-info" style="margin-bottom: 0;">
+                                    <li><span class="glyphicon glyphicon-tag"></span> <a data-actions-icnt="" href="{% url 'papers_with_type' paper.paper_type.pk  %}">{{ paper.paper_type }}</a></li>&nbsp;
+                                    <li><span class="glyphicon glyphicon-user"></span>&nbsp&nbsp{{ paper.author }}</li>&nbsp;&nbsp;
+                                    <li>年份： {{paper.publish_year}}</li>
+                                    <li>ISSN: {{paper.ISSN}}</li>
+                                    <li>关键字： {{ paper.keywords }}</li>
+                                </ul>
+                            </div>
+                        {% empty %}
+                            <div class="blog">
+                                <h3>暂无博客，敬请期待</h3>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="paginator">
+                    <ul class="pagination">
+                        {# 上一页 #}
+                        <li>
+                            {% if page_of_papers.has_previous %}
+                                <a href="?page={{ page_of_papers.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            {% else %}
+                                <span aria-hidden="true">&laquo;</span>
+                            {% endif %}
+                        </li>
+                        {# 全部页码 #}
+                        {% for page_num in page_range %}
+                            {% if page_num == page_of_papers.number %}
+                                <li class="active"><span>{{ page_num }}</span></li>
+                            {% else %}
+                                {% if page_num == '...' %}
+                                    <li><span>{{ page_num }}</span></li>
+                                {% else %}
+                                    <li><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        {# 下一页 #}
+                        <li>
+                            {% if page_of_papers.has_next %}
+                                <a href="?page={{ page_of_papers.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            {% else %}
+                                <span aria-hidden="true">&raquo;</span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                    <p>
+                        共有{{ page_of_papers.paginator.count }}篇博客，
+                        当前第{{ page_of_papers.number }}页，共{{ page_of_papers.paginator.num_pages }}页
+                    </p>
+                </div>
+            </div>
+            <div class="hidden-xs col-sm-4 col-md-3 col-lg-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">论文分类</div>
+                    <div class="panel-body">
+                        <ul class="paper-types">
+                            {% for paper_type in paper_types %}
+                                <li>
+                                    <a href="{% url 'papers_with_type' paper_type.pk %}">
+                                        {{ paper_type.type_name }} ({{ paper_type.paper_count }})
+                                    </a>
+                                </li>
+                            {% empty %}
+                                <li>暂无分类</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script_extends %}
+    <script type="text/javascript">
+        function clickChange(content_type, object_id){
+            $.ajax({
+                url:"{% url 'click_change' %}",
+                type:'GET',
+                data:{
+                    content_type: content_type,
+                    object_id: object_id
+                },
+                cache: false,
+                success: function(data){
+                    console.log(data)
+                },
+                error: function(xhr){
+                    console.log(xhr)
+                }
+            });
+        }
+    </script>
+
+{% endblock %}
