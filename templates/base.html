@@ -12,7 +12,7 @@
     <script type="text/javascript" src="{% static 'bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
     {% block header_extends %}{% endblock %}
 </head>
-<body>
+<body style="background-color: #eee;">
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container-fluid panel-info">
             <div class="navbar-header">
@@ -56,6 +56,49 @@
     </div>
 
     {% block content %}{% endblock %}
+
+
+    <footer>
+        <div style="padding-top: 50px;
+    padding-bottom: 50px;
+    margin-top: 100px;
+    color: #99979c;
+    text-align: center;
+    background-color: #E0E0E0;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <br>
+                        <a href="https://github.com/BrainPicker-L/ahuPaperSystem">
+                            <img class="img-circle" src="/static/img/github.jpg" width="30px" height="20px" alt="GitHub">
+                                <span class="">GitHub</span>
+                            </a>
+                    </div>
+                    <div class="col-md-4">
+                        <br>
+                        Copyright © 2018 安徽大学计算机类论文管理
+
+                    </div>
+                    <div class="col-md-4">
+
+
+                        <br>
+                        <span>
+                            开发人员:
+                            <a href="" class="link_font">@刘子哲</a>
+                            <a href="" class="link_font">@徐淑萌</a>
+                            <a href="" class="link_font">@李晓川</a>
+                            <a href="" class="link_font">@于梦伟</a>
+                        </span>
+                        <br>
+                        <span>
+                            指导老师:琚川徽
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
     {% block script_extends %}{% endblock %}
 </body>
 </html>
